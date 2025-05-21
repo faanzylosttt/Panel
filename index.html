@@ -1,179 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <title>Pterodactyl Admin Panel</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pembayaran Digital</title>
+  <div class="profile-container">
+    <img src="profile.jpg" alt="Profil" class="profile-img"> 
+  </div>
   <style>
     body {
-      background: #111;
-      color: white;
-      font-family: 'Segoe UI', sans-serif;
-      padding: 20px;
-    }
-    input, select, button {
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-    }
-    button {
-      background-color: #00ff99;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #00cc77;
-    }
-    .section {
-      background: #1e1e1e;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-    }
-    .output {
-      white-space: pre-wrap;
-      background: #222;
-      padding: 10px;
-      border-radius: 5px;
-      max-height: 300px;
-      overflow: auto;
-      margin-top: 10px;
-    }
+  background-color: #1e1e1e;
+  color: cyan;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.glow {
+  text-shadow: 0 0 5px cyan, 0 0 10px cyan;
+  margin-bottom: 30px;
+}
+
+.profile-container {
+  margin-bottom: 20px;
+}
+
+.profile-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 5px solid cyan;
+  object-fit: cover;
+}
+
+.box {
+  background: #2a2a2a;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px auto;
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 0 15px cyan;
+}
+
+.box img {
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  text-shadow: 0 0 5px cyan, 0 0 10px cyan;
+}
+
+button {
+  background: cyan;
+  border: none;
+  color: #000;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0 0 10px cyan;
+}
+
+#qris {
+  display: none;
+  margin-top: 20px;
+}
+
+#qris img {
+  width: 200px;
+  height: auto;
+}
+
+#notif {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #003;
+  color: cyan;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: none;
+  font-size: 14px;
+}
   </style>
 </head>
 <body>
-  <h1>Pterodactyl Admin Panel</h1>
 
-  <div class="section">
-    <h2>1. Setup Panel Info</h2>
-    <input id="panelUrl" placeholder="https://faanzyganteng.ashuura.biz.id">
-    <input id="apiKey" placeholder="ptla_CeptZeBHWR9ISwmo4Bkb7L0OmshinRWUFKYzELaeEdB">
+  <h1 class="glow">Pembayaran Digital</h1>
+
+  <div class="box">
+    <div class="info">
+      <img src="https://files.catbox.moe/tm95lt.jpg" alt="DANA">
+      <span id="dana">082233445566</span>
+    </div>
+    <button onclick="copyText('dana')">Salin</button>
   </div>
 
-  <div class="section">
-    <h2>2. Create User</h2>
-    <input id="newUsername" placeholder="Username">
-    <input id="newEmail" placeholder="Email">
-    <input id="newPassword" placeholder="Password">
-    <select id="isAdmin">
-      <option value="false">User</option>
-      <option value="true">Admin</option>
-    </select>
-    <button onclick="createUser()">Create User</button>
-    <div class="output" id="createUserOut"></div>
+  <div class="box">
+    <div class="info">
+      <img src="https://files.catbox.moe/42hgs3.jpg" alt="GOPAY">
+      <span id="gopay">082233445566</span>
+    </div>
+    <button onclick="copyText('gopay')">Salin</button>
   </div>
 
-  <div class="section">
-    <h2>3. List All Servers</h2>
-    <button onclick="listServers()">Get Server List</button>
-    <div class="output" id="serverListOut"></div>
+  <div class="box">
+    <div class="info">
+      <img src="https://files.catbox.moe/42hgs3.jpg" alt="OVO">
+      <span id="ovo">082233445566</span>
+    </div>
+    <button onclick="copyText('ovo')">Salin</button>
   </div>
 
-  <div class="section">
-    <h2>4. List All Users</h2>
-    <button onclick="listUsers()">Get User List</button>
-    <div class="output" id="userListOut"></div>
+  <button onclick="toggleQRIS()">Tampilkan QRIS</button>
+
+  <div id="qris">
+    <img src="qris.jpg" alt="QRIS">
   </div>
+
+  <div id="notif">Berhasil disalin!</div>
 
   <script>
-    function getConfig() {
-      return {
-        panelUrl: document.getElementById("panelUrl").value,
-        apiKey: document.getElementById("apiKey").value
-      };
+    function copyText(id) {
+    const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showNotif();
+      });
     }
 
-    async function createUser() {
-      const { panelUrl, apiKey } = getConfig();
-      const username = document.getElementById("newUsername").value;
-      const email = document.getElementById("newEmail").value;
-      const password = document.getElementById("newPassword").value;
-      const isAdmin = document.getElementById("isAdmin").value === "true";
-
-      const out = document.getElementById("createUserOut");
-      out.textContent = "Creating user...";
-
-      try {
-        const res = await fetch(`${panelUrl}/api/application/users`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/vnd.pterodactyl.v1+json",
-            "Authorization": `Bearer ${apiKey}`
-          },
-          body: JSON.stringify({
-            username,
-            email,
-            first_name: "Auto",
-            last_name: isAdmin ? "Admin" : "User",
-            password,
-            root_admin: isAdmin,
-            language: "en"
-          })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          out.textContent = `Success! User ID: ${data.attributes.id}`;
-        } else {
-          out.textContent = `Error: ${JSON.stringify(data.errors || data)}`;
-        }
-      } catch (err) {
-        out.textContent = `Error: ${err.message}`;
-      }
+    function showNotif() {
+      const notif = document.getElementById('notif');
+      notif.style.display = 'block';
+      setTimeout(() => {
+        notif.style.display = 'none';
+      }, 2000);
     }
 
-    async function listServers() {
-      const { panelUrl, apiKey } = getConfig();
-      const out = document.getElementById("serverListOut");
-      out.textContent = "Loading servers...";
-
-      try {
-        const res = await fetch(`${panelUrl}/api/application/servers`, {
-          headers: {
-            "Accept": "application/vnd.pterodactyl.v1+json",
-            "Authorization": `Bearer ${apiKey}`
-          }
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          out.textContent = data.data.map(s => `${s.attributes.name} - ${s.attributes.identifier}`).join("\n");
-        } else {
-          out.textContent = `Error: ${JSON.stringify(data.errors || data)}`;
-        }
-      } catch (err) {
-        out.textContent = `Error: ${err.message}`;
-      }
-    }
-
-    async function listUsers() {
-      const { panelUrl, apiKey } = getConfig();
-      const out = document.getElementById("userListOut");
-      out.textContent = "Loading users...";
-
-      try {
-        const res = await fetch(`${panelUrl}/api/application/users`, {
-          headers: {
-            "Accept": "application/vnd.pterodactyl.v1+json",
-            "Authorization": `Bearer ${apiKey}`
-          }
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          out.textContent = data.data.map(u => {
-            return `${u.attributes.username} (${u.attributes.email}) - ${u.attributes.root_admin ? 'Admin' : 'User'}`;
-          }).join("\n");
-        } else {
-          out.textContent = `Error: ${JSON.stringify(data.errors || data)}`;
-        }
-      } catch (err) {
-        out.textContent = `Error: ${err.message}`;
-      }
+    function toggleQRIS() {
+      const qris = document.getElementById('qris');
+      qris.style.display = qris.style.display === 'none' ? 'block' : 'none';
     }
   </script>
+
 </body>
 </html>
