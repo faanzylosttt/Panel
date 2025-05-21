@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pterodactyl Admin Panel</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+    input, select, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #00ff99;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00cc77;
+    }
+    .section {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+    .output {
+      white-space: pre-wrap;
+      background: #222;
+      padding: 10px;
+      border-radius: 5px;
+      max-height: 300px;
+      overflow: auto;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pterodactyl Admin Panel</h1>
+
+  <div class="section">
+    <h2>1. Setup Panel Info</h2>
+    <input id="panelUrl" placeholder="https://faanzyganteng.ashuura.biz.id">
+    <input id="apiKey" placeholder="ptla_CeptZeBHWR9ISwmo4Bkb7L0OmshinRWUFKYzELaeEdB">
+  </div>
+
+  <div class="section">
+    <h2>2. Create User</h2>
+    <input id="newUsername" placeholder="Username">
+    <input id="newEmail" placeholder="Email">
+    <input id="newPassword" placeholder="Password">
+    <select id="isAdmin">
+      <option value="false">User</option>
+      <option value="true">Admin</option>
+    </select>
+    <button onclick="createUser()">Create User</button>
+    <div class="output" id="createUserOut"></div>
+  </div>
+
+  <div class="section">
+    <h2>3. List All Servers</h2>
+    <button onclick="listServers()">Get Server List</button>
+    <div class="output" id="serverListOut"></div>
+  </div>
+
+  <div class="section">
+    <h2>4. List All Users</h2>
+    <button onclick="listUsers()">Get User List</button>
+    <div class="output" id="userListOut"></div>
+  </div>
+
+  <script>
+    function getConfig() {
+      return {
+        panelUrl: document.getElementById("panelUrl").value,
+        apiKey: document.getElementById("apiKey").value
+      };
+    }
+
+    async function createUser() {
+      const { panelUrl, apiKey } = getConfig();
+      const username = document.getElementById("newUsername").value;
+      const email = document.getElementById("newEmail").value;
+      const password = document.getElementById("newPassword").value;
+      const isAdmin = document.getElementById("isAdmin").value === "true";
+
+      const out = document.getElementById("createUserOut");
+      out.textContent = "Creating user...";
+
+      try {
+        const res = await fetch(`${panelUrl}/api/application/users`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.pterodactyl.v1+json",
+            "Authorization": `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            username,
+            email,
+            first_name: "Auto",
+            last_name: isAdmin ? "Admin" : "User",
+            password,
+            root_admin: isAdmin,
+            language: "en"
+          })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          out.textContent = `Success! User ID: ${data.attributes.id}`;
+        } else {
+          out.textContent = `Error: ${JSON.stringify(data.errors || data)}`;
+        }
+      } catch (err) {
+        out.textContent = `Error: ${err.message}`;
+      }
+    }
+
+    async function listServers() {
+      const { panelUrl, apiKey } = getConfig();
+      const out = document.getElementById("serverListOut");
+      out.textContent = "Loading servers...";
+
+      try {
+        const res = await fetch(`${panelUrl}/api/application/servers`, {
+          headers: {
+            "Accept": "application/vnd.pterodactyl.v1+json",
+            "Authorization": `Bearer ${apiKey}`
+          }
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          out.textContent = data.data.map(s => `${s.attributes.name} - ${s.attributes.identifier}`).join("\n");
+        } else {
+          out.textContent = `Error: ${JSON.stringify(data.errors || data)}`;
+        }
+      } catch (err) {
+        out.textContent = `Error: ${err.message}`;
+      }
+    }
+
+    async function listUsers() {
+      const { panelUrl, apiKey } = getConfig();
+      const out = document.getElementById("userListOut");
+      out.textContent = "Loading users...";
+
+      try {
+        const res = await fetch(`${panelUrl}/api/application/users`, {
+          headers: {
+            "Accept": "application/vnd.pterodactyl.v1+json",
+            "Authorization": `Bearer ${apiKey}`
+          }
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          out.textContent = data.data.map(u => {
+            return `${u.attributes.username} (${u.attributes.email}) - ${u.attributes.root_admin ? 'Admin' : 'User'}`;
+          }).join("\n");
+        } else {
+          out.textContent = `Error: ${JSON.stringify(data.errors || data)}`;
+        }
+      } catch (err) {
+        out.textContent = `Error: ${err.message}`;
+      }
+    }
+  </script>
+</body>
+</html>
