@@ -1,178 +1,107 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Toko Digital Online</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <title>Skyzopedia</title>
+</head>
 
+<style>
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Orbitron', sans-serif;
-    }
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    } 
 
     body {
-      background: linear-gradient(135deg, #0f0f0f, #1a1a2e);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
+        background-color: rgb(28, 166, 252);
     }
 
-    .glitch {
-      position: relative;
-      font-size: 2rem;
-      font-weight: bold;
-      color: #0ff;
-      text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+    .container {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        margin: 50px auto;
     }
 
-    .glitch::before,
-    .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      top: 0;
-      width: 100%;
-      overflow: hidden;
+    .container img {
+        width: 150px;
+        height: 150px;
+        border: solid 3px rgb(67, 67, 67);
+        border-radius: 50%;
     }
 
-    .glitch::before {
-      left: 2px;
-      color: #f0f;
-      clip: rect(0, 900px, 0, 0);
-      animation: glitchTop 2s infinite linear alternate-reverse;
+    .container .profile {
+        margin: 10px 0;
     }
 
-    .glitch::after {
-      left: -2px;
-      color: #0ff;
-      clip: rect(0, 900px, 0, 0);
-      animation: glitchBottom 2s infinite linear alternate-reverse;
+    .container .description {
+        font-family: "Cabin", sans-serif;
+        text-align: center;
+        line-height: 25px;
     }
 
-    @keyframes glitchTop {
-      0% { clip: rect(0, 900px, 0, 0); }
-      25% { clip: rect(0, 900px, 30px, 0); }
-      50% { clip: rect(0, 900px, 0, 0); }
-      75% { clip: rect(0, 900px, 20px, 0); }
-      100% { clip: rect(0, 900px, 0, 0); }
+    .container .description .name {
+        font-size: 25px;
     }
 
-    @keyframes glitchBottom {
-      0% { clip: rect(0, 900px, 0, 0); }
-      25% { clip: rect(20px, 900px, 50px, 0); }
-      50% { clip: rect(0, 900px, 0, 0); }
-      75% { clip: rect(10px, 900px, 40px, 0); }
-      100% { clip: rect(0, 900px, 0, 0); }
+    .container .description p {
+        font-size: 20px;
     }
 
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 1rem;
-      padding: 2rem;
-      margin-top: 2rem;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-      width: 100%;
-      max-width: 500px;
+    .container .sosmed {
+        margin: 10px 0;
     }
 
-    .form-group {
-      margin-bottom: 1rem;
+    .container .sosmed div {
+        margin: 18px;
+        background-color: black;
+        border-radius: 8px;
+        font-family: "cabin", sans-serif;
+        padding: 15px 80px;
+        text-align: center;
     }
 
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #ccc;
+    .container .sosmed div a {
+        text-decoration: none;
+        color: rgb(211, 210, 210);
     }
 
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 0.7rem;
-      border: none;
-      border-radius: 0.5rem;
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      font-size: 1rem;
-    }
 
-    .form-group input::placeholder {
-      color: #bbb;
-    }
+</style>
 
-    button {
-      width: 100%;
-      padding: 0.8rem;
-      border: none;
-      border-radius: 0.5rem;
-      background: #0ff;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background: #0cf;
-    }
-
-    .qris {
-      margin-top: 1.5rem;
-      text-align: center;
-    }
-
-    .qris img {
-      width: 200px;
-      height: auto;
-      border-radius: 1rem;
-      box-shadow: 0 0 10px #0ff;
-    }
-
-    footer {
-      margin-top: 3rem;
-      color: #555;
-      font-size: 0.9rem;
-    }
-  </style>
-</head>
 <body>
-  <h1 class="glitch" data-text="TOKO DIGITAL ONLINE">TOKO DIGITAL ONLINE</h1>
 
-  <div class="card">
-    <form>
-      <div class="form-group">
-        <label for="layanan">Pilih Layanan:</label>
-        <select id="layanan">
-          <option value="">-- Pilih --</option>
-          <option value="pulsa">Pulsa</option>
-          <option value="data">Paket Data</option>
-          <option value="voucher">Voucher Game</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="nomor">Nomor Tujuan:</label>
-        <input type="text" id="nomor" placeholder="08xxxxxxxxxx" />
-      </div>
-      <div class="form-group">
-        <label for="jumlah">Jumlah / Nominal:</label>
-        <input type="number" id="jumlah" placeholder="Misal: 10000" />
-      </div>
-      <button type="submit">Pesan Sekarang</button>
-    </form>
+<div class="container">
 
-    <div class="qris">
-      <h3>Bayar via QRIS</h3>
-      <img src="https://api.qrserver.com/v1/create-qr-code/?data=ContohQRIS&size=200x200" alt="QRIS" />
+<div class="profile">
+    <img src="https://cache.lahelu.com/image-PZX6LXUtq-60710" alt="Profile">
+</div>
+
+<div class="description">
+    <div class="name">Skyzopedia <\></div>
+    <p>Hello my name is Skyzopedia.</p>
+</div>
+
+<div class="sosmed">
+    <div>
+        <a href="https://wa.me/6285624297893">WhatsApp</a>
     </div>
-  </div>
+    <div>
+        <a href="https://whatsapp.com/channel/0029Vb8cgMEH5JLqiOEdbH1t">Saluran WhatsApp</a>
+    </div>
+    <div>
+        <a href="https://www.youtube.com/@skyzopedia">Youtube</a>
+    </div>
+    <div>
+        <a href="https://github.com/skyzopedia">Github</a>
+    </div>
+</div>
+</div>
 
-  <footer>&copy; 2025 Toko Digital | Desain oleh ChatGPT</footer>
 </body>
 </html>
